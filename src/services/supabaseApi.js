@@ -44,3 +44,14 @@ export async function getSkills(userId) {
   }
   return skills;
 }
+
+export async function getAllSkills() {
+  let { data: skills, error } = await supabase
+    .from("skills")
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (error) {
+    throw error;
+  }
+  return skills;
+}

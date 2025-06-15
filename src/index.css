@@ -4,7 +4,12 @@
 
 @theme {
   --font-roboto: "Roboto", sans-serif;
+  --color-primary: #3b82f6; /* blue-700 */
+  --color-secondary: #2563eb; /* blue-600 */
+  --color-accent: #f59e0b; /* amber-500 */
+  --color-background: #f3f4f6; /* gray-100 */
 }
+
 @layer base {
   body {
     font-family: var(--font-roboto);
@@ -12,11 +17,15 @@
 }
 @layer components {
   .btn {
-    @apply px-4 py-2 bg-blue-500 text-white rounded;
+    @apply px-4 py-2 bg-primary hover:bg-secondary text-white rounded;
   }
 
   input,
   textarea {
-    @apply px-3 py-2 bg-gray-100 border-none rounded focus:outline-none;
+    @apply px-3 py-2 bg-background border-none rounded focus:outline-none;
   }
+}
+
+html {
+  scroll-behavior: smooth;
 }

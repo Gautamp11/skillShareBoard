@@ -75,10 +75,10 @@ function Dashboard() {
   }
   return (
     <div className="flex flex-col p-4 items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+      <h1 className="text-2xl font-bold mb-4">Add Skill</h1>
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col space-y-4 w-80  p-6 rounded-lg shadow-md"
+        className="flex flex-col space-y-4 w-80 border p-6 rounded-lg shadow-md"
       >
         <input
           type="text"
@@ -108,8 +108,8 @@ function Dashboard() {
         </button>
       </form>
       {/*  Displaying skills */}
-      <h2 className="text-xl font-semibold mt-6">Your Skills</h2>
-      <ul className="w-full flex flex-wrap items-center justify-center mt-4 gap-4">
+      <h2 className="text-xl font-semibold mt-8">Your Skills</h2>
+      <ul className="max-w-4xl flex flex-wrap items-center justify-center mt-4 gap-4">
         {skillsLoading && (
           <div className="flex justify-center items-center h-20">
             <ClipLoader color="#000" />
@@ -119,15 +119,17 @@ function Dashboard() {
           skills.map((skill) => (
             <li
               key={skill.id}
-              className="bg-white w-60 p-2 rounded shadow-md hover:bg-gray-100 transition"
+              className="capitalize rounded border w-60 p-6 shadow-md hover:bg-gray-100 transition"
             >
               <div className="flex justify-between items-center mb-2">
-                <h3 className="font-bold">{skill.title}</h3>
-                <span className="text-sm font-medium bg-blue-500 rounded text-white w-16 text-center p-1">
+                <h3 className="font-bold text-lg">{skill.title}</h3>
+                <span className="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full self-start">
                   {skill.category}
-                </span>
+                </span>{" "}
               </div>
-              <p className="text-sm">{skill.description}</p>
+              <p className="text-sm text-gray-600">
+                {skill.description.slice(0, 15)}...
+              </p>
             </li>
           ))}
       </ul>
