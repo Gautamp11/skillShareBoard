@@ -55,3 +55,28 @@ export async function getAllSkills() {
   }
   return skills;
 }
+
+export async function getFilteredSkills(category, skill) {
+  if (!category) {
+    throw new Error("Category is required");
+  }
+
+  let query = supabase
+    .from("skills")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (category !== "all") {
+    query = query.eq("category", category);
+  }
+
+  if (skill && skill !== "all") {
+    query = query.ilike("title", `%${skill}%`);
+  }
+
+  const { data: skills, error } = await query;
+  if (error) {
+    throw error;
+  }
+  return skills;
+}

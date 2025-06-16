@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllSkills } from "../services/supabaseApi";
+import { getAllSkills, getFilteredSkills } from "../services/supabaseApi";
 import SkillCard from "../components/SkillCard";
 
 function Explore() {
@@ -14,6 +14,9 @@ function Explore() {
     business: ["Project Management", "Agile", "Scrum", "Lean", "Six Sigma"],
   };
 
+  const [filteredCategory, setfilteredCategory] = useState("all");
+  const [filteredSkill, setfilteredSkill] = useState("all");
+
   const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -21,7 +24,7 @@ function Explore() {
     async function fetchSkills() {
       setLoading(true);
       try {
-        const data = await getAllSkills();
+        const data = await getFilteredSkills(filteredCategory, filteredSkill);
         setSkills(data);
       } catch (error) {
         console.error("Error fetching skills:", error);
@@ -30,8 +33,16 @@ function Explore() {
       }
     }
     fetchSkills();
-  }, []);
+  }, [filteredCategory, filteredSkill]);
 
+  function handleFilterCategory(category) {
+    setfilteredCategory(category);
+  }
+
+  function handleSkillFilter(skill, category) {
+    setfilteredSkill(skill);
+    setfilteredCategory(category);
+  }
   return (
     <div className="flex min-h-screen ">
       {/* Left Sidebar - Fixed */}
@@ -39,14 +50,20 @@ function Explore() {
         {Object.keys(categories).map((category, index) => {
           return (
             <div key={index} className=" capitalize mb-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">
+              <h1
+                className={`text-lg font-semibold w-full p-2 rounded text-gray-800 mb-2 cursor-pointer hover:bg-gray-200 ${
+                  filteredCategory === category ? "bg-gray-200" : ""
+                }`}
+                onClick={() => handleFilterCategory(category)}
+              >
                 {category}
-              </h3>
+              </h1>
               <ul className="space-y-1">
                 {categories[category].map((skill) => (
                   <li
                     key={skill}
                     className="flex items-center px-3 py-2 rounded-md hover:bg-blue-50 group"
+                    onClick={() => handleSkillFilter(skill, category)}
                   >
                     <span className="text-gray-600 group-hover:text-blue-600">
                       {skill}
@@ -61,9 +78,12 @@ function Explore() {
           );
         })}
       </aside>
+
+      {/* //Main content */}
       <main className="flex-1 p-4 ">
-        <SkillCard skills={skills} />
+        <SkillCard skills={skills} filteredCategory={filteredCategory} />
       </main>
+
       {/* Right Sidebar - Desktop Only */}
       <aside className="w-64 bg-gray-100 shadow-sm fixed right-0 h-screen p-4 hidden lg:block">
         Right Sidebar Content

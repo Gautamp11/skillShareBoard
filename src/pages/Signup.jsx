@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signUp } from "../services/supabaseApi";
 import toast from "react-hot-toast";
+import { ClipLoader } from "react-spinners";
 
 function Signup() {
   const [email, setEmail] = useState("");

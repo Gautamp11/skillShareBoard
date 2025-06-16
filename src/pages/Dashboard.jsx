@@ -47,6 +47,7 @@ function Dashboard() {
       category: form.category,
       description: form.description,
       user_id: user.id,
+      user_email: user.email,
     };
     setLoading(true);
 
@@ -119,7 +120,7 @@ function Dashboard() {
           skills.map((skill) => (
             <li
               key={skill.id}
-              className="capitalize rounded border w-60 p-6 shadow-md hover:bg-gray-100 transition"
+              className="capitalize rounded border w-60 h-30 p-6 shadow-md hover:bg-gray-100 transition"
             >
               <div className="flex justify-between items-center mb-2">
                 <h3 className="font-bold text-lg">{skill.title}</h3>
