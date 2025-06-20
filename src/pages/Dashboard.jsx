@@ -12,6 +12,7 @@ function Dashboard() {
     title: "",
     category: "",
     description: "",
+    canHelp: false,
   });
   // I want to get user id
   const { user } = useAuth();
@@ -48,6 +49,7 @@ function Dashboard() {
       description: form.description,
       user_id: user.id,
       user_email: user.email,
+      can_help: form.canHelp,
     };
     setLoading(true);
 
@@ -59,13 +61,14 @@ function Dashboard() {
           title: "",
           category: "",
           description: "",
+          canHelp: false,
         });
         return getSkills(user.id);
       })
       .then((data) => {
         setSkills(data);
       })
-      .catch((error) => {
+      .catch(() => {
         toast.error("Error adding skill!");
       })
       .finally(() => {
@@ -76,7 +79,11 @@ function Dashboard() {
   }
   return (
     <div className="flex flex-col p-4 items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">Add Skill</h1>
+      <p className="mb-2 text-lg letter-spacing-10">
+        Hey, {user?.email} <br />
+      </p>
+
+      <h1 className="text-2xl text-center font-bold mb-4">Add Skill</h1>
       <form
         onSubmit={handleSubmit}
         className="flex flex-col space-y-4 w-80 border p-6 rounded-lg shadow-md"
@@ -104,6 +111,14 @@ function Dashboard() {
           value={form.description}
           onChange={(e) => setForm({ ...form, description: e.target.value })}
         />
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={form.canHelp}
+            onChange={(e) => setForm({ ...form, canHelp: e.target.checked })}
+          />
+          <span>I'm open to helping others with this skill</span>
+        </label>
         <button disabled={loading} className="btn" type="submit">
           {loading ? <ClipLoader color="white" /> : "Submit"}
         </button>

@@ -34,6 +34,13 @@ function SkillCard({ skills }) {
               </span>{" "}
             </div>
             <p className="text-gray-600 mt-4">{skill.description}</p>{" "}
+            {skill.can_help ? (
+              <p className="text-green-800 w-fit bg-green-100 text-sm rounded-full px-2 py-1 mt-4 hover:bg-green-200">
+                Open to help{" "}
+              </p>
+            ) : (
+              ""
+            )}
           </div>
         ))
       ) : (

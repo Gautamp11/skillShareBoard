@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getAllSkills, getFilteredSkills } from "../services/supabaseApi";
 import SkillCard from "../components/SkillCard";
+import LeftSideBar from "../components/LeftSideBar";
 
 function Explore() {
   const categories = {
@@ -37,6 +38,7 @@ function Explore() {
 
   function handleFilterCategory(category) {
     setfilteredCategory(category);
+    setfilteredSkill("all");
   }
 
   function handleSkillFilter(skill, category) {
@@ -47,36 +49,12 @@ function Explore() {
     <div className="flex min-h-screen ">
       {/* Left Sidebar - Fixed */}
       <aside className="w-64 bg-gray-100 shadow-sm fixed h-screen p-4 hidden md:block overflow-y-auto">
-        {Object.keys(categories).map((category, index) => {
-          return (
-            <div key={index} className=" capitalize mb-6">
-              <h1
-                className={`text-lg font-semibold w-full p-2 rounded text-gray-800 mb-2 cursor-pointer hover:bg-gray-200 ${
-                  filteredCategory === category ? "bg-gray-200" : ""
-                }`}
-                onClick={() => handleFilterCategory(category)}
-              >
-                {category}
-              </h1>
-              <ul className="space-y-1">
-                {categories[category].map((skill) => (
-                  <li
-                    key={skill}
-                    className="flex items-center px-3 py-2 rounded-md hover:bg-blue-50 group"
-                    onClick={() => handleSkillFilter(skill, category)}
-                  >
-                    <span className="text-gray-600 group-hover:text-blue-600">
-                      {skill}
-                    </span>
-                    <span className="ml-auto opacity-0 group-hover:opacity-100">
-                      →
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          );
-        })}
+        <LeftSideBar
+          categories={categories}
+          filteredCategory={filteredCategory}
+          handleFilterCategory={handleFilterCategory}
+          handleSkillFilter={handleSkillFilter}
+        />
       </aside>
 
       {/* //Main content */}

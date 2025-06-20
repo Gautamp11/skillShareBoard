@@ -57,6 +57,8 @@ export async function getAllSkills() {
 }
 
 export async function getFilteredSkills(category, skill) {
+  console.log(category, skill);
+
   if (!category) {
     throw new Error("Category is required");
   }
