@@ -82,3 +82,39 @@ export async function getFilteredSkills(category, skill) {
   }
   return skills;
 }
+
+export async function deleteSkill(id) {
+  const { error } = await supabase.from("skills").delete().eq("id", id);
+  if (error) {
+    throw error;
+  }
+}
+
+export async function getSkill(isEditing) {
+  const { data, error } = await supabase
+    .from("skills")
+    .select("*")
+    .eq("id", isEditing)
+    .single(); // 👈 to get a single row
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  return data;
+}
+
+export async function updateSkill(isEditing, skill) {
+  const { data, error } = await supabase
+    .from("skills")
+    .update(skill)
+    .eq("id", isEditing);
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  return data;
+}

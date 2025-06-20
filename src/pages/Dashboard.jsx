@@ -1,81 +1,50 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
-import { addSkill, getSkills } from "../services/supabaseApi";
+import { addSkill, deleteSkill, getSkills } from "../services/supabaseApi";
 import { ClipLoader } from "react-spinners";
 import toast from "react-hot-toast";
+import { FaPen, FaTrash } from "react-icons/fa6";
+import AddUpdateSkillForm from "../components/AddUpdateSkillForm";
 
 function Dashboard() {
   const [skills, setSkills] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [skillsLoading, setSkillsLoading] = useState(false);
-  const [form, setForm] = useState({
-    title: "",
-    category: "",
-    description: "",
-    canHelp: false,
-  });
+  const [isEditing, setIsEditing] = useState(null);
+
   // I want to get user id
   const { user } = useAuth();
 
-  useEffect(() => {
-    async function fetchSkills() {
-      if (!user?.id) return;
-      setSkillsLoading(true);
+  async function fetchSkills() {
+    if (!user?.id) return;
+    setSkillsLoading(true);
 
-      getSkills(user.id)
-        .then((data) => {
-          setSkills(data);
-          setSkillsLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching skills:", error);
-          toast.error("Failed to fetch skills");
-          setSkillsLoading(false);
-        });
-    }
+    getSkills(user.id)
+      .then((data) => {
+        setSkills(data);
+        setSkillsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching skills:", error);
+        toast.error("Failed to fetch skills");
+        setSkillsLoading(false);
+      });
+  }
+
+  useEffect(() => {
     fetchSkills();
   }, [user]);
 
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    if (!form.title || !form.category || !form.description) {
-      toast.error("All fields are required");
-      return;
-    }
-    const skill = {
-      title: form.title,
-      category: form.category,
-      description: form.description,
-      user_id: user.id,
-      user_email: user.email,
-      can_help: form.canHelp,
-    };
-    setLoading(true);
-
-    // Here you would typically send the skill to your backend or API
-    addSkill(skill)
+  function handleDelete(id) {
+    deleteSkill(id)
       .then(() => {
-        toast.success("Skill added successfully!");
-        setForm({
-          title: "",
-          category: "",
-          description: "",
-          canHelp: false,
-        });
-        return getSkills(user.id);
+        toast.success("Deleted successfully!");
+        fetchSkills();
       })
-      .then((data) => {
-        setSkills(data);
-      })
-      .catch(() => {
-        toast.error("Error adding skill!");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-
-    // Reset form after submission
+      .catch(() => toast.error("Error deleting the skill"));
+  }
+  function handleEdit(id) {
+    console.log(id);
+    setIsEditing(id);
   }
   return (
     <div className="flex flex-col p-4 items-center justify-center min-h-screen">
@@ -84,58 +53,28 @@ function Dashboard() {
       </p>
 
       <h1 className="text-2xl text-center font-bold mb-4">Add Skill</h1>
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col space-y-4 w-80 border p-6 rounded-lg shadow-md"
-      >
-        <input
-          type="text"
-          placeholder="Title"
-          value={form.title}
-          onChange={(e) => setForm({ ...form, title: e.target.value })}
-        />
-        <select
-          className="border-none outline-none bg-gray-100 rounded p-2"
-          placeholder="Category"
-          value={form.category}
-          onChange={(e) => setForm({ ...form, category: e.target.value })}
-        >
-          <option value="">Select a category</option>
-          <option value="frontend">Frontend</option>
-          <option value="backend">Backend</option>
-          <option value="devops">DevOps</option>
-          <option value="design">Design</option>
-        </select>
-        <textarea
-          placeholder="Description"
-          value={form.description}
-          onChange={(e) => setForm({ ...form, description: e.target.value })}
-        />
-        <label className="flex items-center gap-2 text-sm">
-          <input
-            type="checkbox"
-            checked={form.canHelp}
-            onChange={(e) => setForm({ ...form, canHelp: e.target.checked })}
-          />
-          <span>I'm open to helping others with this skill</span>
-        </label>
-        <button disabled={loading} className="btn" type="submit">
-          {loading ? <ClipLoader color="white" /> : "Submit"}
-        </button>
-      </form>
+
+      <AddUpdateSkillForm
+        user={user}
+        fetchSkills={fetchSkills}
+        isEditing={isEditing}
+        setIsEditing={setIsEditing}
+      />
+
       {/*  Displaying skills */}
       <h2 className="text-xl font-semibold mt-8">Your Skills</h2>
-      <ul className="max-w-4xl flex flex-wrap items-center justify-center mt-4 gap-4">
+      <ul className="max-w-5xl flex flex-wrap items-center justify-center mt-4 gap-4">
         {skillsLoading && (
           <div className="flex justify-center items-center h-20">
             <ClipLoader color="#000" />
           </div>
         )}
+
         {!skillsLoading &&
           skills.map((skill) => (
             <li
               key={skill.id}
-              className="capitalize rounded border w-60 h-30 p-6 shadow-md hover:bg-gray-100 transition"
+              className="capitalize rounded border w-70 h-40 p-6 shadow-md hover:bg-gray-100 transition"
             >
               <div className="flex justify-between items-center mb-2">
                 <h3 className="font-bold text-lg">{skill.title}</h3>
@@ -143,9 +82,25 @@ function Dashboard() {
                   {skill.category}
                 </span>{" "}
               </div>
-              <p className="text-sm text-gray-600">
-                {skill.description.slice(0, 15)}...
+
+              <p className="text-sm text-gray-600 flex justify-between items-center">
+                {skill.description.slice(0, 10)}...{" "}
+                {skill.can_help ? (
+                  <span className="bg-green-100 rounded-full px-2 py-1">
+                    Open to help
+                  </span>
+                ) : (
+                  ""
+                )}
               </p>
+              <div className="flex gap-4 mt-4 text-sm">
+                <button onClick={() => handleDelete(skill.id)} className="btn">
+                  <FaTrash />
+                </button>{" "}
+                <button className="btn" onClick={() => handleEdit(skill.id)}>
+                  <FaPen />
+                </button>
+              </div>
             </li>
           ))}
       </ul>

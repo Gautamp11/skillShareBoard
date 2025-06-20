@@ -1,3 +1,5 @@
+import { FaMessage } from "react-icons/fa6";
+
 function SkillCard({ skills }) {
   return (
     <div className="max-w-2xl mx-auto ">
@@ -35,9 +37,17 @@ function SkillCard({ skills }) {
             </div>
             <p className="text-gray-600 mt-4">{skill.description}</p>{" "}
             {skill.can_help ? (
-              <p className="text-green-800 w-fit bg-green-100 text-sm rounded-full px-2 py-1 mt-4 hover:bg-green-200">
-                Open to help{" "}
-              </p>
+              <div className="flex items-center gap-2 mt-4">
+                <a
+                  className=" flex items-center gap-2 text-sm bg-blue-100 rounded-full px-2 py-1 text-blue-600 hover:bg-blue-200"
+                  href={`mailto:${skill.user_email}`}
+                >
+                  <FaMessage /> Reach out
+                </a>
+                <p className="text-green-800 w-fit bg-green-100 text-sm rounded-full px-2 py-1 hover:bg-green-200">
+                  Open to help{" "}
+                </p>
+              </div>
             ) : (
               ""
             )}
