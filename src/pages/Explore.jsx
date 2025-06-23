@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { getAllSkills, getFilteredSkills } from "../services/supabaseApi";
+import { getFilteredSkills } from "../services/supabaseApi";
 import SkillCard from "../components/SkillCard";
 import LeftSideBar from "../components/LeftSideBar";
+import { ClipLoader } from "react-spinners";
 
 function Explore() {
   const categories = {
@@ -48,7 +49,7 @@ function Explore() {
   return (
     <div className="flex min-h-screen ">
       {/* Left Sidebar - Fixed */}
-      <aside className="w-64 bg-gray-100 shadow-sm fixed h-screen p-4 hidden md:block overflow-y-auto">
+      <aside className="w-64 bg-gray-100 shadow-sm fixed h-screen p-4 hidden lg:block overflow-y-auto">
         <LeftSideBar
           categories={categories}
           filteredCategory={filteredCategory}
@@ -58,12 +59,25 @@ function Explore() {
       </aside>
 
       {/* //Main content */}
-      <main className="flex-1 p-4 ">
-        <SkillCard skills={skills} filteredCategory={filteredCategory} />
+
+      <main className="flex-1 p-4 lg:ml-64 lg:mr-64">
+        <div className="bg-white lg:bg-transparent lg:bg-none sticky top-1 z-10  py-2 flex justify-center mb-6">
+          <input
+            type="text"
+            placeholder="Search skills..."
+            className="w-full md:max-w-xl lg:max-w-2xl px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          />
+        </div>
+
+        <SkillCard
+          skills={skills}
+          filteredCategory={filteredCategory}
+          loading={loading}
+        />
       </main>
 
       {/* Right Sidebar - Desktop Only */}
-      <aside className="w-64 bg-gray-100 shadow-sm fixed right-0 h-screen p-4 hidden lg:block">
+      <aside className="w-64 bg-gray-100 shadow-sm fixed right-0 h-screen p-4 hidden lg:block  ">
         Right Sidebar Content
       </aside>
 

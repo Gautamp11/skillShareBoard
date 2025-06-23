@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
-import { addSkill, deleteSkill, getSkills } from "../services/supabaseApi";
+import { deleteSkill, getSkills } from "../services/supabaseApi";
 import { ClipLoader } from "react-spinners";
 import toast from "react-hot-toast";
 import { FaPen, FaTrash } from "react-icons/fa6";
@@ -52,7 +52,9 @@ function Dashboard() {
         Hey, {user?.email} <br />
       </p>
 
-      <h1 className="text-2xl text-center font-bold mb-4">Add Skill</h1>
+      <h1 className="text-2xl text-center font-bold mb-4">
+        {isEditing ? "Update Skill" : "Add Skill"}
+      </h1>
 
       <AddUpdateSkillForm
         user={user}

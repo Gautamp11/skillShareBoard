@@ -1,4 +1,3 @@
-import { useAuth } from "../hooks/useAuth";
 import { supabase } from "./supabaseClient";
 
 export async function signUp({ email, password }) {
@@ -57,15 +56,17 @@ export async function getAllSkills() {
 }
 
 export async function getFilteredSkills(category, skill) {
-  console.log(category, skill);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!category) {
     throw new Error("Category is required");
   }
-
   let query = supabase
     .from("skills")
     .select("*")
+    .neq("user_id", user?.id)
     .order("created_at", { ascending: false });
 
   if (category !== "all") {
@@ -117,4 +118,12 @@ export async function updateSkill(isEditing, skill) {
   }
 
   return data;
+}
+
+export async function getUser(userId) {
+  const { data, error } = await supabase.auth.admin.getUserById(userId);
+  if (error) {
+    throw error;
+  }
+  return data.user;
 }

@@ -1,6 +1,8 @@
 import { FaMessage } from "react-icons/fa6";
+import { Link } from "react-router-dom";
+import { ClipLoader } from "react-spinners";
 
-function SkillCard({ skills }) {
+function SkillCard({ skills, loading }) {
   return (
     <div className="max-w-2xl mx-auto ">
       {skills.length > 0 ? (
@@ -11,16 +13,22 @@ function SkillCard({ skills }) {
           >
             {/* User profile Section */}
             <div className="py-2 flex gap-4 items-center mb-2">
-              <div className="bg-gray-200 rounded-full w-12 h-12 flex justify-center items-center">
+              <div className="bg-gray-200 rounded-full w-12 h-12 flex justify-center items-center cursor-pointer">
                 {/* <img src="" alt="" /> */}
-                <span className="text-lg font-medium text-gray-600">
+                <Link
+                  to={`/profile/${skill.user_id}`}
+                  className="text-lg font-medium text-gray-600"
+                >
                   {skill?.user_email.charAt(0).toUpperCase() || "?"}
-                </span>
+                </Link>
               </div>
               <div>
-                <h1 className="font-semibold  text-gray-800">
+                <Link
+                  to={`/profile/${skill.user_id}`}
+                  className="font-semibold  text-gray-800 cursor-pointer"
+                >
                   {skill?.user_email?.split("@")[0] || "Anonymous"}
-                </h1>
+                </Link>
                 <p className="text-xs text-gray-500">
                   {new Date(skill.created_at).toLocaleDateString()}
                 </p>
@@ -55,7 +63,13 @@ function SkillCard({ skills }) {
         ))
       ) : (
         <h1 className="text-center font-semibold text-xl">
-          No Skills found with current filter
+          {loading ? (
+            <div className="flex justify-center items-center h-20">
+              <ClipLoader color="#000" />
+            </div>
+          ) : (
+            "No Skills found with current filter"
+          )}
         </h1>
       )}
     </div>

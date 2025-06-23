@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Explore from "./pages/Explore";
 import Layout from "./components/Layout";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -15,7 +16,6 @@ function App() {
       {/* Public routes */}
       <Route element={<Layout />}>
         <Route path="*" element={<Navigate to="/" replace />} />
-        <Route path="/explore" element={<Explore />} />
       </Route>
 
       <Route path="/login" element={<Login />} />
@@ -25,6 +25,8 @@ function App() {
       <Route element={<Layout />}>
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/explore" element={<Explore />} />
+          <Route path="/profile/:userId" element={<Profile />} />
         </Route>
       </Route>
     </Routes>
