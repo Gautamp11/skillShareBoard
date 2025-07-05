@@ -26,7 +26,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/explore" element={<Explore />} />
-          <Route path="/profile/:userId" element={<Profile />} />
+          <Route path="/user/:userId" element={<Profile />} />
         </Route>
       </Route>
     </Routes>

@@ -1,30 +1,22 @@
 import { useEffect, useState } from "react";
-import { getSkills, getUser } from "../services/supabaseApi";
+import { getSkills } from "../services/supabaseApi";
 import toast from "react-hot-toast";
 import { ClipLoader } from "react-spinners";
 import { FaMessage } from "react-icons/fa6";
+import { useLocation } from "react-router-dom";
 
 function Userprofile({ userId }) {
   const [skills, setSkills] = useState([]);
   const [skillsLoading, setSkillsLoading] = useState(false);
-  //   const [user, setUser] = useState({});
 
-  //   async function fetchUser() {
-  //     if (!userId) return;
+  //scrollbar to top as it is rpeserving prebbious location
+  const { pathname } = useLocation();
 
-  //     getUser(userId)
-  //       .then((data) => {
-  //         console.log(data);
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [pathname]);
 
-  //         setUser(data);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching user:", error);
-  //         toast.error("Failed to fetch user details");
-  //       });
-  //   }
-
-  async function fetchSkills() {
+  useEffect(() => {
     if (!userId) return;
     setSkillsLoading(true);
 
@@ -38,10 +30,6 @@ function Userprofile({ userId }) {
         toast.error("Failed to fetch skills");
         setSkillsLoading(false);
       });
-  }
-
-  useEffect(() => {
-    fetchSkills();
   }, [userId]);
 
   if (!skills.length && !skillsLoading)
@@ -52,7 +40,7 @@ function Userprofile({ userId }) {
     );
 
   return (
-    <div className="flex flex-col justify-start items-center min-h-screen p-8">
+    <div className="flex flex-col justify-start items-center p-8">
       {/* User profile Section */}
       {/* Currently using user details from skills as no users table is maintained */}
 

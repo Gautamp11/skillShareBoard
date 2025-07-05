@@ -18,7 +18,8 @@ function Explore() {
 
   const [filteredCategory, setfilteredCategory] = useState("all");
   const [filteredSkill, setfilteredSkill] = useState("all");
-
+  const [search, setSearch] = useState("");
+  const [allSkills, setAllSkills] = useState([]);
   const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -27,6 +28,7 @@ function Explore() {
       setLoading(true);
       try {
         const data = await getFilteredSkills(filteredCategory, filteredSkill);
+        setAllSkills(data);
         setSkills(data);
       } catch (error) {
         console.error("Error fetching skills:", error);
@@ -34,6 +36,7 @@ function Explore() {
         setLoading(false);
       }
     }
+
     fetchSkills();
   }, [filteredCategory, filteredSkill]);
 
@@ -46,6 +49,23 @@ function Explore() {
     setfilteredSkill(skill);
     setfilteredCategory(category);
   }
+
+  function handleSearch(val) {
+    setSearch(val);
+
+    if (!val.trim()) {
+      setSkills(allSkills); // reset to original
+      return;
+    }
+
+    const filtered = allSkills.filter(
+      (skill) =>
+        skill.title.toLowerCase().includes(val.toLowerCase()) ||
+        skill.description.toLowerCase().includes(val.toLowerCase())
+    );
+    setSkills(filtered);
+  }
+
   return (
     <div className="flex min-h-screen ">
       {/* Left Sidebar - Fixed */}
@@ -66,6 +86,8 @@ function Explore() {
             type="text"
             placeholder="Search skills..."
             className="w-full md:max-w-xl lg:max-w-2xl px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            value={search}
+            onChange={(e) => handleSearch(e.target.value)}
           />
         </div>
 
